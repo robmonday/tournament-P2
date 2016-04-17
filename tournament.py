@@ -3,6 +3,16 @@
 # tournament.py -- implementation of a Swiss-system tournament
 #
 
+"""
+SQL query commands needed to manipulate database records:
+conn = connect()
+c = conn.cursor()
+c.execute("your query;")
+conn.commit() 
+conn.close() 
+"""
+
+
 import psycopg2
 
 
@@ -11,16 +21,27 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
+
 def deleteMatches():
     """Remove all the match records from the database."""
+    conn = connect()
+	c = conn.cursor()
+	c.execute("DELETE FROM matches;")
+
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    conn = connect()
+	c = conn.cursor()
+	c.execute("DELETE FROM players;")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    conn = connect()
+	c = conn.cursor()
+	c.execute("SELECT count(*) FROM players;")
 
 
 def registerPlayer(name):
@@ -32,6 +53,9 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    conn = connect()
+	c = conn.cursor()
+	c.execute("INSERT INTO players(name) VALUES (name);")
 
 
 def playerStandings():
@@ -47,6 +71,9 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    conn = connect()
+	c = conn.cursor()
+	c.execute("SELECT matches_by_player.name, wins_by_player.win_count, matches_by_player.match_count FROM matches_by_player LEFT JOIN wins_by_player ON matches_by_player.id = wins_by_player.id;") 
 
 
 def reportMatch(winner, loser):
@@ -56,6 +83,7 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    
  
  
 def swissPairings():
