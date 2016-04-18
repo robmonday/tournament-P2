@@ -50,7 +50,7 @@ def registerPlayer(name):
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO players(name) VALUES ('%s');" % name )
+    c.execute("INSERT INTO players(name) VALUES (%s);" , (name,) )
     conn.commit()
     conn.close()
 
@@ -85,8 +85,13 @@ def reportMatch(winner, loser):
     """
     conn = connect()
     c = conn.cursor()
-    match_id = c.execute("SELECT id FROM match WHERE (player1_id = %s AND player_2 = %s) OR (player1_id = %s AND player_2 = %s);" % (winner, loser, loser, winner)) #need to determine which match to update...we know no teams play twice
-    c.execute("UPDATE matches SET status = 'played', winner = %s, loser = %s WHERE id = %s;" % (winner, loser, match_id))
+    # match_id = c.execute("SELECT id FROM matches WHERE (player1_id = %s AND player2_id = %s) OR (player1_id = %s AND player2_id = %s);" , (winner, loser, loser, winner)) #need to determine which match to update...teams don't play twice
+    # If(...):
+    #   c.execute("UPDATE matches SET status = 'played', winner = %s, loser = %s;" % (winner, loser))
+    # else:
+    #     c.execute("UPDATE matches SET status = 'played', winner = %s, loser = %s WHERE id = %s;" % (winner, loser, match_id))
+    c.execute("INSERT INTO matches(status, player1_id, player2_id, winner, loser) VALUES ('played', %s, %s, %s, %s);" , (winner, loser, winner, loser))
+    conn.commit()
     conn.close()
 
 
@@ -106,4 +111,4 @@ def swissPairings():
         name2: the second player's name
     """
     standings = playerStandings();
-    print standings
+    print "Rob print stmt:  Swiss pairings function called!"

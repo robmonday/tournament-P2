@@ -5,6 +5,8 @@ INSERT INTO players (name, team_color1, team_color2) VALUES ('Harvard','Crimson'
 INSERT INTO players (name, team_color1, team_color2) VALUES ('Tennessee','Light Orange','White');
 INSERT INTO players (name, team_color1, team_color2) VALUES ('Clemson','Orange','Purple');
 INSERT INTO players (name, team_color1, team_color2) VALUES ('Vanderbilt','Black', 'Gold');
+INSERT INTO players (name, team_color1, team_color2) VALUES ('UGA','Red', 'Black');
+INSERT INTO players (name, team_color1, team_color2) VALUES ('Georgia Tech','Gold', 'White');
 
 --Set up venues
 INSERT INTO venues (venue_name, state) VALUES ('Thompson Bowling Arena', 'TN');
@@ -47,7 +49,5 @@ UPDATE matches SET status = 'played', p1_score = 33, p2_score = 28, winner = 2, 
 UPDATE matches SET status = 'played', p1_score = 32, p2_score = 33, winner = 6, loser = 3, tie = FALSE WHERE id = 5;
 UPDATE matches SET status = 'played', p1_score = 56, p2_score = 51, winner = 1, loser = 4, tie = FALSE WHERE id = 6;
 
-/* TEST AREA
-
-
+/*
 */

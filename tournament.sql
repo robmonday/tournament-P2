@@ -28,8 +28,8 @@ CREATE TABLE Venues(
 
 CREATE TABLE Matches(
 	id 			serial PRIMARY KEY,
-	round 		int NOT NULL CHECK (round > 0),
-	venue_id	int NOT NULL REFERENCES venues(id),
+	round 		int CHECK (round > 0),
+	venue_id	int REFERENCES venues(id),
 	game_time 	timestamp DEFAULT current_timestamp,
 	player1_id	int REFERENCES Players(id),
 	player2_id	int REFERENCES Players(id),
@@ -42,17 +42,20 @@ CREATE TABLE Matches(
 );
 
 CREATE VIEW standings_data AS
-(SELECT p.id, p.name, (CASE WHEN (m.player1_id = m.winner)=TRUE THEN 1 ELSE 0 END) AS win 
+(SELECT p.id, p.name, (CASE WHEN (m.player1_id = m.winner)=TRUE THEN 1 ELSE 0 END) AS win, 1 AS match 
 FROM matches AS m JOIN players AS P 
 ON p.id = m.player1_id)
 UNION ALL
-(SELECT p.id, p.name, (CASE WHEN (m.player2_id = m.winner)=TRUE THEN 1 ELSE 0 END) AS win 
+(SELECT p.id, p.name, (CASE WHEN (m.player2_id = m.winner)=TRUE THEN 1 ELSE 0 END) AS win, 1 AS match
 FROM matches AS m JOIN players AS P 
 ON p.id = m.player2_id)
+UNION ALL
+(SELECT p.id, p.name, 0 AS win, 0 AS match
+FROM players AS P)
 ;
 
 CREATE VIEW standings AS
-SELECT id, name, sum(win) AS wins, count(win) AS matches 
+SELECT id, name, sum(win) AS wins, sum(match) AS matches 
 FROM standings_data 
 GROUP BY id, name 
 ORDER BY wins DESC;
