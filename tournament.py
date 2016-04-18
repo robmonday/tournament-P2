@@ -81,7 +81,7 @@ def playerStandings():
     """
     conn = connect("dbname=tournament")
 	c = conn.cursor()
-	c.execute("SELECT matches_by_player.name, wins_by_player.win_count, matches_by_player.match_count FROM matches_by_player LEFT JOIN wins_by_player ON matches_by_player.id = wins_by_player.id ORDER BY wins_by_player.win_count DESC;") 
+	c.execute("SELECT * FROM standings;") 
     standings = c.fetchall()
     conn.close()
     return standings
