@@ -41,18 +41,18 @@ CREATE TABLE Matches(
 	tie 		boolean DEFAULT FALSE
 );
 
---number of games by player
-CREATE VIEW matches_by_player AS
-SELECT players.id, players.name, count(*) AS match_count
-FROM players RIGHT JOIN matches ON (players.id = matches.player1_id OR players.id = matches.player2_id)
-WHERE status = 'played'
-GROUP BY players.id, players.name;
-
---number of wins by player
-CREATE VIEW wins_by_player AS
-SELECT players.id, players.name, count(*) AS win_count
-FROM players RIGHT JOIN matches ON players.id = matches.winner
-WHERE status = 'played' AND tie = FALSE
-GROUP BY players.id, players.name
-ORDER BY win_count DESC
+CREATE VIEW standings_data AS
+(SELECT p.name, (CASE WHEN (m.player1_id = m.winner)=TRUE THEN 1 ELSE 0 END) AS win 
+FROM matches AS m JOIN players AS P 
+ON p.id = m.player1_id)
+UNION ALL
+(SELECT p.name, (CASE WHEN (m.player2_id = m.winner)=TRUE THEN 1 ELSE 0 END) AS win 
+FROM matches AS m JOIN players AS P 
+ON p.id = m.player2_id)
 ;
+
+CREATE VIEW standings AS
+SELECT name, sum(win) AS win_count, count(win) AS match_count 
+FROM standings_data 
+GROUP BY name 
+ORDER BY win_count DESC;
