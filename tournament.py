@@ -8,7 +8,7 @@ SQL query commands needed to manipulate database records:
 conn = connect()
 c = conn.cursor()
 c.execute("your query;")
-conn.commit() 
+conn.commit() #only needed for create, update or delete
 conn.close() 
 """
 
@@ -24,24 +24,30 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
+    conn = connect("dbname=tournament")
 	c = conn.cursor()
 	c.execute("DELETE FROM matches;")
-
+    conn.commit() 
+    conn.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
+    conn = connect("dbname=tournament")
 	c = conn.cursor()
 	c.execute("DELETE FROM players;")
+    conn.commit() 
+    conn.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn = connect()
+    conn = connect("dbname=tournament")
 	c = conn.cursor()
 	c.execute("SELECT count(*) FROM players;")
+    player_count = c.fetchall()
+    conn.close()
+    return player_count
 
 
 def registerPlayer(name):
@@ -53,9 +59,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
+    conn = connect("dbname=tournament")
 	c = conn.cursor()
 	c.execute("INSERT INTO players(name) VALUES (name);")
+    conn.commit() 
+    conn.close()
 
 
 def playerStandings():
@@ -71,10 +79,12 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn = connect()
+    conn = connect("dbname=tournament")
 	c = conn.cursor()
-	c.execute("SELECT matches_by_player.name, wins_by_player.win_count, matches_by_player.match_count FROM matches_by_player LEFT JOIN wins_by_player ON matches_by_player.id = wins_by_player.id;") 
-
+	c.execute("SELECT matches_by_player.name, wins_by_player.win_count, matches_by_player.match_count FROM matches_by_player LEFT JOIN wins_by_player ON matches_by_player.id = wins_by_player.id ORDER BY wins_by_player.win_count DESC;") 
+    standings = c.fetchall()
+    conn.close()
+    return standings
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -83,8 +93,12 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    
- 
+    conn = connect("dbname=tournament")
+	c = conn.cursor()
+    match_id = c.execute("SELECT id FROM match WHERE (player1_id = %s AND player_2 = %s) OR (player1_id = %s AND player_2 = %s);" % (winner, loser, loser, winner)) #need to determine which match to update...we know no teams play twice
+	c.execute("UPDATE matches SET status = 'played', winner = %s, loser = %s WHERE id = %s;" % (winner, loser, match_id)) 
+    conn.close()
+
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.

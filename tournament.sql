@@ -38,7 +38,7 @@ CREATE TABLE Matches(
 	p2_score	int CHECK (p2_score>=0),
 	winner		int REFERENCES players(id),
 	loser		int REFERENCES players(id),
-	tie 		boolean
+	tie 		boolean DEFAULT FALSE
 );
 
 --number of games by player
@@ -54,5 +54,5 @@ SELECT players.id, players.name, count(*) AS win_count
 FROM players RIGHT JOIN matches ON players.id = matches.winner
 WHERE status = 'played' AND tie = FALSE
 GROUP BY players.id, players.name
---ORDER BY win_count DESC
+ORDER BY win_count DESC
 ;

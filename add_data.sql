@@ -46,7 +46,8 @@ UPDATE matches SET player1_id = 1, player2_id = 4, status = 'scheduled' WHERE id
 UPDATE matches SET status = 'played', p1_score = 33, p2_score = 28, winner = 2, loser = 5, tie = FALSE WHERE id = 4;
 UPDATE matches SET status = 'played', p1_score = 32, p2_score = 33, winner = 6, loser = 3, tie = FALSE WHERE id = 5;
 UPDATE matches SET status = 'played', p1_score = 56, p2_score = 51, winner = 1, loser = 4, tie = FALSE WHERE id = 6;
-/*
+
+/* TEST AREA
 
 
 */
