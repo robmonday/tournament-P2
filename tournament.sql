@@ -56,3 +56,6 @@ SELECT id, name, sum(win) AS wins, count(win) AS matches
 FROM standings_data 
 GROUP BY id, name 
 ORDER BY wins DESC;
+
+--importing fictional data for testing purposes
+-- \i add_data.sql 
