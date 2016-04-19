@@ -110,5 +110,13 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    standings = playerStandings();
-    print "Rob print stmt:  Swiss pairings function called!"
+    standings = playerStandings(); #this function returns a list of tuples...one per row
+    i = len(standings)
+    pairings = []
+    while i>1: 
+        p1 = standings.pop()
+        p2 = standings.pop()
+        r = (p1[0], p1[1], p2[0], p2[1])
+        pairings.append(r)
+        i = i - 2
+    return pairings
